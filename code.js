@@ -110,13 +110,27 @@ function setupControlButtons() {
   clearButton.onclick = clearButtonHandler;
 }
 
+//clear button
 function clearButtonHandler() {
   console.log('Clear the game: stop playing, clear the grid');
   playing = false;
   let startButton = document.getElementById('start');
   startButton.innerHTML = 'start';
+
+  clearTimeout(timer);
+
+  let cellsList = document.getElementsByClassName('live'); //returns a node list (not yet an array)
+  let cells = []; //declare new var for cells
+  for (let i = 0; i < cellsList.length; i++) {
+    cells.push(cellsList[i]); //push node list to an array si we can clear the data properly
+  }
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].setAttribute('class', 'dead');
+  }
+  resetGrids();
 }
 
+//start/continue button
 function startButtonHandler() {
   if(playing) {
     console.log('Pause the game');
