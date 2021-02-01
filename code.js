@@ -1,17 +1,55 @@
 
 const controls = document.querySelector('.controls');
+const gridContainer = document.getElementById('gridContainer');
+let playing = false;
 
 let rows = 24;
 let cols = 24;
 
+let grid = new Array(rows); //1st array (current)
+let nextGrid = new Array(rows); //2nd array (coming up next)
+
+let timer;
+let reproductionTime = 100; //control how quickly the cells update
+
+function initializeGrids() {
+  for (let i = 0; i < rows; i++) {
+    grid[i] = new Array(cols); //create a 2d array within grid
+    nextGrid[i] = new Array(cols); //create a 2d array within nextGrid
+  }
+}
+
+//Reset all cells to 0 (dead state)
+function resetGrids() {
+  for(let i = 0; i < rows; i++) {
+    for(let j = 0; j < cols; j++) { //iterate through all rows and columns
+      grid[i][j] = 0;
+      nextGrid[i][j] = 0;
+    }
+  }
+}
+
+//Reset all cells to 0 (dead state)
+function copyAndResetGrid() {
+  for(let i = 0; i < rows; i++) {
+    for(let j = 0; j < cols; j++) { //iterate through all rows and columns
+      grid[i][j] = nextGrid[i][j];
+      nextGrid[i][j] = 0;
+    }
+  }
+}
+
 //initialize
 function initialize() { //calls any other functions needed to get the game initialized
   createTable();
+  initializeGrids();
+  resetGrids();
+  setupControlButtons();
 }
 
 //lay out the board
 function createTable() { //generate table rows and columns
-  const gridContainer = document.getElementById('gridContainer');
+
   if(!gridContainer){
     //Throw error
     console.error("Problem: no div for the grid table!");
@@ -25,11 +63,142 @@ function createTable() { //generate table rows and columns
       let cell = document.createElement('td');
       cell.setAttribute('id', i + "_" + j); //create a unique id for the cell
       cell.setAttribute('class', 'dead'); //add className of 'dead' to the cell
+      cell.onclick = cellClickHandler;
       tr.appendChild(cell); //appending cell to the row
     }
     table.appendChild(tr); //append tr element to the table element in the outer loop
   }
   gridContainer.appendChild(table);
+
+}
+
+function cellClickHandler() {
+  let rowcol = this.id.split('_');
+  let row = rowcol[0];
+  var col = rowcol[1];
+
+  let classes = this.getAttribute('class');
+  if(classes.indexOf('live') > -1) {
+    this.setAttribute('class', 'dead');
+    grid[row][col] = 0;
+  } else {
+    this.setAttribute('class', 'live');
+    grid[row][col] = 1;
+  }
+}
+
+function updateView() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            var cell = document.getElementById(i + "_" + j);
+            if (grid[i][j] == 0) {
+                cell.setAttribute("class", "dead");
+            } else {
+                cell.setAttribute("class", "live");
+            }
+        }
+    }
+}
+
+function setupControlButtons() {
+  //Button to start
+  let startButton = document.getElementById('start');
+  startButton.onclick = startButtonHandler;
+
+  //Button to clear
+  let clearButton = document.getElementById('clear');
+  clearButton.onclick = clearButtonHandler;
+}
+
+function clearButtonHandler() {
+  console.log('Clear the game: stop playing, clear the grid');
+  playing = false;
+  let startButton = document.getElementById('start');
+  startButton.innerHTML = 'start';
+}
+
+function startButtonHandler() {
+  if(playing) {
+    console.log('Pause the game');
+    playing = false;
+    this.innerHTML = 'continue';
+    clearTimeout(timer);
+  } else {
+    console.log('Continue the game');
+    playing = true;
+    this.innerHTML = 'pause';
+    play();
+  }
+}
+
+//run the life game
+function play() {
+  computeNextGen();
+
+  if(playing) {
+    timer = setTimeout(play, reproductionTime);
+  }
+}
+
+function computeNextGen() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            applyRules(i, j);
+        }
+    }
+    copyAndResetGrid();
+    updateView();
+}
+
+// RULES
+// Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+// Any live cell with two or three live neighbours lives on to the next generation.
+// Any live cell with more than three live neighbours dies, as if by overcrowding.
+// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+function applyRules(row, col) {
+    var numNeighbors = countNeighbors(row, col);
+    if (grid[row][col] == 1) {
+        if (numNeighbors < 2) {
+            nextGrid[row][col] = 0;
+        } else if (numNeighbors == 2 || numNeighbors == 3) {
+            nextGrid[row][col] = 1;
+        } else if (numNeighbors > 3) {
+            nextGrid[row][col] = 0;
+        }
+    } else if (grid[row][col] == 0) {
+        if (numNeighbors == 3) {
+            nextGrid[row][col] = 1;
+        }
+    }
+}
+
+function countNeighbors(row, col) {
+    var count = 0;
+    if (row-1 >= 0) {
+        if (grid[row-1][col] == 1) count++;
+    }
+    if (row-1 >= 0 && col-1 >= 0) {
+        if (grid[row-1][col-1] == 1) count++;
+    }
+    if (row-1 >= 0 && col+1 < cols) {
+        if (grid[row-1][col+1] == 1) count++;
+    }
+    if (col-1 >= 0) {
+        if (grid[row][col-1] == 1) count++;
+    }
+    if (col+1 < cols) {
+        if (grid[row][col+1] == 1) count++;
+    }
+    if (row+1 < rows) {
+        if (grid[row+1][col] == 1) count++;
+    }
+    if (row+1 < rows && col-1 >= 0) {
+        if (grid[row+1][col-1] == 1) count++;
+    }
+    if (row+1 < rows && col+1 < cols) {
+        if (grid[row+1][col+1] == 1) count++;
+    }
+    return count;
 }
 
 //start Game
