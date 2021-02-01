@@ -46,3 +46,37 @@ button {
   font-size: 16px;
   font-weight: bolder;
 }
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal {
+    position: relative;
+    width: 95%;
+    max-width: 420px;
+    min-height: 415px;
+    margin: 10px auto auto;
+    padding: 1%;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 0.25em;
+    border: 1px solid rgba(100, 100, 100, 0.3);
+    transition: .4s ease-out;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.8);
+    outline: none;
+    border-radius: 0.25em;
+    border: 1px solid rgba(50, 50, 50, 0.3);
+}

@@ -1,6 +1,7 @@
 
 const controls = document.querySelector('.controls');
 const gridContainer = document.getElementById('gridContainer');
+const instructions = document.querySelector('.instructions');
 let playing = false;
 
 let rows = 50;
@@ -234,6 +235,36 @@ function countNeighbors(row, col) {
     }
     return count;
 }
+const rulesBtn = document.getElementById('rules');
+rulesBtn.addEventListener('click', () => {
+  instructions.insertAdjacentHTML('beforeend', `
+    <div class="modal-container">
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <h2>Four Basic Rules:</h2>
+            <ul>
+              <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
+              <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
+              <li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
+              <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+            </ul>
+            <h2>How to Play:</h2>
+            <ul>
+              <li>Create your own pattern by clicking on the cells of your choice or choose 'Randomize' for a random approach</li>
+              <li>Click 'start' button to start the game or 'pause' to pause the game.</li>
+              <li>Anytime throughout the game you may add live cells to the grid.</li>
+              <li>Click 'clear' to reset the game board to entirely dead cells.</li>
+              <li>Have fun experimenting!</li>
+            </ul>
+        </div>
+    `);
+
+  //Close Modal window button
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  modalCloseBtn.addEventListener('click', (e) => {
+    instructions.lastElementChild.remove(); //remove it from the screen...
+  });
+});
 
 //start Game
 window.onload = initialize;
