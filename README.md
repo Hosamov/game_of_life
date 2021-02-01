@@ -1,11 +1,11 @@
-#Game of Life Readme
-##Created by: Matt Coale  
+# Game of Life Readme
+## Created by: Matt Coale  
 
-##Click a cell to change state to 'live'
--Click cells before or during the game
+## Click a cell to change state to 'live'
+- Click cells before or during the game
 
-###Click Start button to start the game
+### Click Start button to start the game
 
-###Click Randomize button to randomize the grid
+### Click Randomize button to randomize the grid
 
-###Click Clear button to clear the entire grid
+### Click Clear button to clear the entire grid
