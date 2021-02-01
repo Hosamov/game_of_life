@@ -3,8 +3,8 @@ const controls = document.querySelector('.controls');
 const gridContainer = document.getElementById('gridContainer');
 let playing = false;
 
-let rows = 24;
-let cols = 24;
+let rows = 50;
+let cols = 50;
 
 let grid = new Array(rows); //1st array (current)
 let nextGrid = new Array(rows); //2nd array (coming up next)
@@ -108,6 +108,10 @@ function setupControlButtons() {
   //Button to clear
   let clearButton = document.getElementById('clear');
   clearButton.onclick = clearButtonHandler;
+
+  //Button to randomize
+  let randomButton = document.getElementById('random');
+  randomButton.onclick = randomButtonHandler;
 }
 
 //clear button
@@ -143,6 +147,22 @@ function startButtonHandler() {
     this.innerHTML = 'pause';
     play();
   }
+}
+
+//random Button
+function randomButtonHandler() {
+    if (playing) return;
+    clearButtonHandler();
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            var isLive = Math.round(Math.random());
+            if (isLive == 1) {
+                var cell = document.getElementById(i + "_" + j);
+                cell.setAttribute("class", "live");
+                grid[i][j] = 1;
+            }
+        }
+    }
 }
 
 //run the life game
