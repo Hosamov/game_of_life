@@ -241,7 +241,8 @@ rulesBtn.addEventListener('click', () => {
     <div class="modal-container">
         <div class="modal">
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            <h2>Four Basic Rules:</h2>
+            <h2>Rules:</h2>
+            <p>There are four basic rules to John Conway's Game of Life:</p>
             <ul>
               <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
               <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
@@ -251,7 +252,7 @@ rulesBtn.addEventListener('click', () => {
             <h2>How to Play:</h2>
             <ul>
               <li>Create your own pattern by clicking on the cells of your choice or choose 'Randomize' for a random approach</li>
-              <li>Click 'start' button to start the game or 'pause' to pause the game.</li>
+              <li>Click 'start' button to start the game or 'pause' to pause the game (<strong>Note:</strong> it is best practice to pause the game prior to adding multiple cells)</li>
               <li>Anytime throughout the game you may add live cells to the grid.</li>
               <li>Click 'clear' to reset the game board to entirely dead cells.</li>
               <li>Have fun experimenting!</li>
@@ -261,8 +262,8 @@ rulesBtn.addEventListener('click', () => {
 
   //Close Modal window button
   const modalCloseBtn = document.getElementById('modal-close-btn');
-  modalCloseBtn.addEventListener('click', (e) => {
-    instructions.lastElementChild.remove(); //remove it from the screen...
+  modalCloseBtn.addEventListener('click', () => {
+    instructions.lastElementChild.remove(); //exit out of modal window
   });
 });
 
